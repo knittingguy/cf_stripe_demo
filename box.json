@@ -1,0 +1,15 @@
+{
+    "dependencies":{
+        "coldbox":"^7.2.0",
+        "stripecfml":"^3.5.0"
+    },
+    "installPaths":{
+        "coldbox":"coldbox/",
+        "stripecfml":"modules/stripecfml/"
+    },
+    "location":"",
+    "name":"stripe_demo",
+    "scripts":{},
+    "slug":"stripedemo",
+    "version":"1.0.0"
+}

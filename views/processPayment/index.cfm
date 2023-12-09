@@ -1,0 +1,3 @@
+<cfoutput>
+#prc.title#
+</cfoutput>

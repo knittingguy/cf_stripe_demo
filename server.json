@@ -1,0 +1,8 @@
+{
+    "name":"stripe_demo",
+    "web":{
+        "rewrites":{
+            "enable":"true"
+        }
+    }
+}
