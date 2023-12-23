@@ -17,6 +17,7 @@ component {
 
             cfhttp(url=prc.baseStripeURL, result="prc.sessionRetreievalDetails", method="GET") {
                 cfhttpparam (type="header" ,name="Authorization" ,value="Bearer #prc.secretKey#" );
+                cfhttpparam (type="header", name="Stripe-Version", value="2023-10-16");
             }
    
             if (prc.sessionRetreievalDetails.status_code == 200) {
@@ -27,6 +28,7 @@ component {
                 prc.baseStripePaymentURL = "https://api.stripe.com/v1/payment_intents/#prc.payment_intent#";
                 cfhttp(url=prc.baseStripePaymentURL, result="prc.paymentRetreievalDetails", method="GET") {
                     cfhttpparam (type="header" ,name="Authorization" ,value="Bearer #prc.secretKey#" );
+                    cfhttpparam (type="header", name="Stripe-Version", value="2023-10-16");
                 }  
 
                 if (prc.paymentRetreievalDetails.status_code == 200) {
@@ -35,6 +37,7 @@ component {
                     prc.baseStripeChargeURL = "https://api.stripe.com/v1/charges/#prc.chargeID#";
                     cfhttp(url=prc.baseStripeChargeURL, result="prc.chargeRetreievalDetails", method="GET") {
                         cfhttpparam (type="header" ,name="Authorization" ,value="Bearer #prc.secretKey#" );
+                        cfhttpparam (type="header", name="Stripe-Version", value="2023-10-16");
                     }
 
                     if (prc.chargeRetreievalDetails.status_code == 200) {
@@ -70,17 +73,16 @@ component {
                         charge_id: prc.newPaymentInfo.content.latest_charge
                     )
 
-                    writedump(prc.newChargeInfo);
-                    abort;
+
                 }
 
        
 
             }
-          writedump(prc.newSessionRetrieval);
-            abort;
+ 
 
         }
+        prc.title = "process Payment way 2 ";
     } 
 
     function cancel(event, rc, prc) {
@@ -98,8 +100,9 @@ component {
 
             cfhttp(url=prc.baseStripeURL, result="prc.sessionDetails", method="POST") {
                 cfhttpparam (type="header" ,name="Authorization" ,value="Bearer #prc.secretKey#" );
-                cfhttpparam (type="formfield", name="success_url", value="https://7fz9vtk6-52644.usw3.devtunnels.ms/processPayment/way1?session_id={CHECKOUT_SESSION_ID}");
-                cfhttpparam (type="formfield", name="cancel_url", value="https://7fz9vtk6-52644.usw3.devtunnels.ms/processPayment/cancel");
+                cfhttpparam (type="header", name="Stripe-Version", value="2023-10-16");
+                cfhttpparam (type="formfield", name="success_url", value="https://2xgwpf0w-52644.usw3.devtunnels.ms/processPayment/way1?session_id={CHECKOUT_SESSION_ID}");
+                cfhttpparam (type="formfield", name="cancel_url", value="https://2xgwpf0w-52644.usw3.devtunnels.ms/processPayment/cancel");
                 cfhttpparam (type="formfield", name="line_items[0][price_data][currency]", value="USD");
                 cfhttpparam (type="formfield", name="line_items[0][price_data][product_data][name]", value="The Magnificent Autobiography of Monte Chan");
                 cfhttpparam (type="formfield", name="line_items[0][price_data][unit_amount]", value="1995");
@@ -122,8 +125,8 @@ component {
     function send2(event, rc, prc) {
         if (rc.keyExists("qty")) {
             prc.newSessionDetails = stripe.checkout.sessions.create(
-                success_url: "https://7fz9vtk6-52644.usw3.devtunnels.ms/processPayment/way2?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url: "https://7fz9vtk6-52644.usw3.devtunnels.ms/processPayment/cancel2",
+                success_url: "https://2xgwpf0w-52644.usw3.devtunnels.ms/processPayment/way2?session_id={CHECKOUT_SESSION_ID}",
+                cancel_url: "https://2xgwpf0w-52644.usw3.devtunnels.ms/processPayment/cancel2",
                 mode: "payment",
                 currency: "usd",
                 line_items: [
@@ -141,27 +144,16 @@ component {
 
             );
  
-/*
-            prc.baseStripeURL = "https://api.stripe.com/v1/checkout/sessions";
-            prc.secretKey = "sk_test_51NNeI7HV9sqmfAskvN9GTcLLRXttToDFij8V0K2aJFQTlva2JCZbcTBfYEdEmKLlLnHkZb4ROHMiLYHObO3hBmr100rge9yPCv";
 
-            cfhttp(url=prc.baseStripeURL, result="prc.sessionDetails", method="POST") {
-                cfhttpparam (type="header" ,name="Authorization" ,value="Bearer #prc.secretKey#" );
-                cfhttpparam (type="formfield", name="success_url", value="");
-                cfhttpparam (type="formfield", name="cancel_url", value=");
-                cfhttpparam (type="formfield", name="line_items[0][price_data][currency]", value="USD");
-                cfhttpparam (type="formfield", name="line_items[0][price_data][product_data][name]", value="The Magnificent Autobiography of Monte Chan");
-                cfhttpparam (type="formfield", name="line_items[0][price_data][unit_amount]", value="1995");
-                cfhttpparam (type="formfield", name="line_items[0][quantity]", value="#rc.qty#");
-                cfhttpparam (type="formfield", name="mode", value="payment");
-            }
-*/
-            if (prc.newSessionDetails.status_code == 200) {
-
+            prc.url = "";
+            prc.errorMessage = "";
+        
+            if (structKeyExists(prc.newSessionDetails.content, "error")) {
+               prc.errorMessage = "Error: " & prc.newSessionDetails.content.error.message;
+            } else {
                 prc.url = prc.newSessionDetails.content.url;
-            } 
+            }
 
-            // prc.url = "/";
         } 
 
     }

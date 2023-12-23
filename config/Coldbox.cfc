@@ -123,7 +123,11 @@ component {
 		 * --------------------------------------------------------------------------
 		 * Remember that the order of declaration is the order they will be registered and fired
 		 */
-		interceptors = [];
+		interceptors = [
+			{
+				class = "interceptors.stripeEventCatcher"
+			}
+		];
 
 		/**
 		 * --------------------------------------------------------------------------
@@ -141,7 +145,10 @@ component {
 		moduleSettings = {
 			stripecfml: {
 				apiKey: 'sk_test_51NNeI7HV9sqmfAskvN9GTcLLRXttToDFij8V0K2aJFQTlva2JCZbcTBfYEdEmKLlLnHkZb4ROHMiLYHObO3hBmr100rge9yPCv',
-				config: {}
+				endpointSecret: 'whsec_c94598bfebeac2ed3fc2f08e4513ed3d8e2de3436e25b7afda052c813a41ae32',
+				config: {
+					apiVersion: '2023-10-16'
+				}
 			}
 		};
 
