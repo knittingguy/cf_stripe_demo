@@ -7,3 +7,6 @@
 <br/>
 Stripe CLI command for webhooks<br/>
 stripe listen --forward-to http://127.0.0.1:52644/stripecfml/webhooks -j
+<br/>
+<br/>
+NOTE: Please change the Stripe keys to the ones in your account and the URLs to yours
